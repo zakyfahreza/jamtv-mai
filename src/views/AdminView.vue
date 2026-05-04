@@ -213,7 +213,7 @@ import {
   getSettings, updateSetting,
   getIqomahTimes, updateIqomahTime,
   getSlides, createSlide, updateSlide, deleteSlide,
-  getAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement,
+  getAllAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement,
   getAudioFiles, createAudioFile, uploadFile
 } from '@/composables/useSupabase'
 
@@ -262,7 +262,7 @@ async function loadData() {
   globalLoading.value = true
   try {
     const [s, sl, an, it, af] = await Promise.all([
-      getSettings(), getSlides(), getAnnouncements(),
+      getSettings(), getSlides(), getAllAnnouncements(),
       getIqomahTimes(), getAudioFiles()
     ])
     Object.assign(form, {

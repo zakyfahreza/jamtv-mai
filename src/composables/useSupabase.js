@@ -100,8 +100,19 @@ export async function getAnnouncements() {
   return data
 }
 
+export async function getAllAnnouncements() {
+  if (!supabase) return getDefaultAnnouncements()
+  const { data, error } = await supabase
+    .from('announcements')
+    .select('*')
+    .order('id', { ascending: true })
+  if (error) return getDefaultAnnouncements()
+  return data
+}
+
+let mockAnnId = 100
 export async function createAnnouncement(text) {
-  if (!supabase) return
+  if (!supabase) return { id: ++mockAnnId, text, is_active: true }
   const { data, error } = await supabase
     .from('announcements')
     .insert({ text, is_active: true })
@@ -111,13 +122,13 @@ export async function createAnnouncement(text) {
 }
 
 export async function updateAnnouncement(id, updates) {
-  if (!supabase) return
+  if (!supabase) return true
   const { error } = await supabase.from('announcements').update(updates).eq('id', id)
   if (error) console.error('Error updating announcement:', error)
 }
 
 export async function deleteAnnouncement(id) {
-  if (!supabase) return
+  if (!supabase) return true
   const { error } = await supabase.from('announcements').delete().eq('id', id)
   if (error) console.error('Error deleting announcement:', error)
 }
