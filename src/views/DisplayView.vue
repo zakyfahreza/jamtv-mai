@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import ClockMode      from '@/components/ClockMode.vue'
 import DisplaySlideshow from '@/components/DisplaySlideshow.vue'
 import IqomahCountdown from '@/components/IqomahCountdown.vue'
@@ -132,6 +132,13 @@ function scheduleNextSwitch() {
   if (modeSwitchTimer) clearTimeout(modeSwitchTimer)
   modeSwitchTimer = setTimeout(switchMode, getModeDuration(currentMode.value))
 }
+
+watch(() => settings.value.display_mode, (newMode, oldMode) => {
+  if (newMode && newMode !== oldMode) {
+    if (modeSwitchTimer) clearTimeout(modeSwitchTimer)
+    switchMode()
+  }
+})
 
 // ─── Prayer / Iqomah ─────────────────────────────────────────────────────────
 function onPrayerTriggered(prayerName) {
@@ -209,7 +216,18 @@ onMounted(async () => {
   scheduleNextSwitch()
   iqomah.startMonitoring(onPrayerTriggered)
   setupMidnightReset()
+  
+  // Full refresh every 24 hours
   refreshTimer = setInterval(loadAllData, 24 * 60 * 60 * 1000)
+
+  // Fast poll for settings & announcements (every 10 seconds)
+  setInterval(async () => {
+    try {
+      const [s, an] = await Promise.all([getSettings(), getAnnouncements()])
+      settings.value = s
+      announcements.value = an
+    } catch (e) { /* ignore network errors during poll */ }
+  }, 10 * 1000)
 
   // Unlock audio after 5s (TV autoplay)
   setTimeout(() => audio.unlockAudio(), 5000)
