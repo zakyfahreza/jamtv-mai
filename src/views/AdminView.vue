@@ -162,13 +162,20 @@
               style="background:rgba(11,30,23,0.7); border:1px solid rgba(37,77,53,0.6);"
             >
               <span style="color:#D4AF37;" class="flex-shrink-0 mt-0.5">📢</span>
-              <p class="text-sm flex-1 leading-relaxed">{{ ann.text }}</p>
-              <div class="flex gap-1.5 flex-shrink-0">
-                <button @click="toggleAnnouncement(ann)" class="btn-tiny"
+              <div class="flex-1">
+                <textarea v-if="ann.isEditing" v-model="ann.editText" class="form-input w-full text-sm" rows="2"></textarea>
+                <p v-else class="text-sm leading-relaxed">{{ ann.text }}</p>
+              </div>
+              <div class="flex flex-col gap-1.5 flex-shrink-0">
+                <div class="flex gap-1.5">
+                  <button v-if="ann.isEditing" @click="saveEditAnnouncement(ann)" class="btn-tiny" style="color:#95D5B2; border-color:rgba(82,183,136,0.4);">✓</button>
+                  <button v-else @click="startEditAnnouncement(ann)" class="btn-tiny" style="color:#D4AF37; border-color:rgba(212,175,55,0.4);">✏️</button>
+                  <button @click="removeAnnouncement(ann)" class="btn-tiny" style="color:#F87171; border-color:rgba(248,113,113,0.4);">✕</button>
+                </div>
+                <button v-if="!ann.isEditing" @click="toggleAnnouncement(ann)" class="btn-tiny w-full text-xs"
                   :style="{ color: ann.is_active ? '#52B788' : '#F87171', borderColor: ann.is_active ? 'rgba(82,183,136,0.4)' : 'rgba(248,113,113,0.4)' }">
                   {{ ann.is_active ? 'ON' : 'OFF' }}
                 </button>
-                <button @click="removeAnnouncement(ann)" class="btn-tiny" style="color:#F87171; border-color:rgba(248,113,113,0.4);">✕</button>
               </div>
             </div>
           </div>
@@ -354,6 +361,17 @@ async function addAnnouncement() {
   if (!newAnnouncementText.value.trim()) return
   const d = await createAnnouncement(newAnnouncementText.value.trim())
   if (d) { announcements.value.push(d); newAnnouncementText.value = ''; showToast('✓ Pengumuman ditambahkan!') }
+}
+function startEditAnnouncement(a) {
+  a.isEditing = true
+  a.editText = a.text
+}
+async function saveEditAnnouncement(a) {
+  if (!a.editText.trim()) return
+  await updateAnnouncement(a.id, { text: a.editText.trim() })
+  a.text = a.editText.trim()
+  a.isEditing = false
+  showToast('✓ Pengumuman diupdate.')
 }
 async function toggleAnnouncement(a) {
   await updateAnnouncement(a.id, { is_active: !a.is_active })
