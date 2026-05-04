@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* TV display mode — overflow hidden */
+  html.tv-mode,
+  html.tv-mode body {
+    overflow: hidden !important;
+    height: 100%;
+    width: 100%;
+  }
+
+  /* Admin mode — allow scroll */
+  html,
+  body {
+    width: 100%;
+    min-height: 100%;
+    background: #0B1E17;
+    color: #E8F5EE;
+    font-family: 'Inter', sans-serif;
+  }
+
+  #app {
+    width: 100%;
+    min-height: 100%;
+  }
+}
+
+@layer components {
+
+  /* ── Gold accent ── */
+  .gold-text {
+    color: #D4AF37;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.45);
+  }
+
+  /* ── Green glow text ── */
+  .green-glow {
+    color: #95D5B2;
+    text-shadow: 0 0 15px rgba(82, 183, 136, 0.4);
+  }
+
+  /* ── Glass card ── */
+  .glass-card {
+    background: rgba(24, 51, 34, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(82, 183, 136, 0.18);
+  }
+
+  /* ── Divider gold ── */
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #D4AF37 50%, transparent);
+    opacity: 0.5;
+  }
+
+  /* ── Divider green ── */
+  .divider-green {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #52B788 50%, transparent);
+    opacity: 0.4;
+  }
+
+  /* ── Prayer pill (horizontal bar) ── */
+  .prayer-pill {
+    @apply flex flex-col items-center px-4 py-2 rounded-xl transition-all duration-500;
+    background: rgba(24, 51, 34, 0.6);
+    border: 1px solid rgba(82, 183, 136, 0.15);
+  }
+  .prayer-pill.active {
+    background: rgba(212, 175, 55, 0.12);
+    border-color: rgba(212, 175, 55, 0.55);
+    box-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
+  }
+  .prayer-pill.past {
+    opacity: 0.45;
+  }
+
+  /* ── TV safe area ── */
+  .tv-safe {
+    padding: 2.5vh 3.5vw;
+  }
+
+  /* ── Admin card ── */
+  .admin-card {
+    background: rgba(17, 37, 25, 0.9);
+    border: 1px solid rgba(37, 77, 53, 0.8);
+    @apply rounded-xl p-4;
+  }
+
+  /* ── Form inputs (admin) ── */
+  .form-label {
+    @apply block text-xs font-medium mb-1;
+    color: #6AAF8A;
+  }
+  .form-input {
+    @apply w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all duration-200;
+    background: rgba(11, 30, 23, 0.9);
+    border: 1px solid rgba(37, 77, 53, 0.8);
+    color: #E8F5EE;
+  }
+  .form-input:focus {
+    border-color: rgba(82, 183, 136, 0.6);
+    box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.1);
+  }
+  .btn-primary {
+    @apply px-4 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+    background: linear-gradient(135deg, #3A7D5B, #2D6A4F);
+    color: #E8F5EE;
+    border: 1px solid rgba(82, 183, 136, 0.3);
+  }
+  .btn-primary:not(:disabled):hover {
+    background: linear-gradient(135deg, #52B788, #3A7D5B);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(82, 183, 136, 0.3);
+  }
+}
+
+/* ── Hide scrollbar on TV display ── */
+.tv-display ::-webkit-scrollbar { display: none; }
+.tv-display * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* ── Transition: fade ── */
+.fade-enter-active, .fade-leave-active { transition: opacity 0.8s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+
+/* ── Transition: announcement fade ── */
+.ann-enter-active { transition: opacity 0.6s ease, transform 0.6s ease; }
+.ann-leave-active { transition: opacity 0.5s ease, transform 0.5s ease; }
+.ann-enter-from { opacity: 0; transform: translateY(8px); }
+.ann-leave-to   { opacity: 0; transform: translateY(-8px); }
+
+/* ── Transition: slide-fade (slideshow) ── */
+.slide-fade-enter-active { transition: all 0.9s ease-out; }
+.slide-fade-leave-active { transition: all 0.7s ease-in; }
+.slide-fade-enter-from { opacity: 0; transform: scale(1.04); }
+.slide-fade-leave-to   { opacity: 0; transform: scale(0.96); }
+
+/* ── Arabesque SVG background pattern ── */
+.arabesque-bg {
+  position: relative;
+}
+.arabesque-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%2352B788' stroke-width='0.5' opacity='0.18'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3Cpath d='M40 10 L70 40 L40 70 L10 40 Z'/%3E%3Cpath d='M40 20 L60 40 L40 60 L20 40 Z'/%3E%3Ccircle cx='40' cy='40' r='8'/%3E%3Ccircle cx='0' cy='0' r='5'/%3E%3Ccircle cx='80' cy='0' r='5'/%3E%3Ccircle cx='0' cy='80' r='5'/%3E%3Ccircle cx='80' cy='80' r='5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 80px 80px;
+  pointer-events: none;
+  z-index: 0;
+}
+.arabesque-bg > * { position: relative; z-index: 1; }
